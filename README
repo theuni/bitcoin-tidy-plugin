@@ -1,0 +1,4 @@
+Example Usage:
+
+cmake -S . -B build -DLLVM_DIR=/path/to/lib/cmake/llvm -DCMAKE_BUILD_TYPE=Release
+make -j -C build
