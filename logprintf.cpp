@@ -11,17 +11,7 @@
 namespace {
 AST_MATCHER(clang::StringLiteral, unterminated) {
     size_t len = Node.getLength();
-    if(len == 0) {
-        return false;
-    }
-    if(Node.getCodeUnit(len-1) == '\n') {
-        return false;
-    }
-    if (len > 2 &&
-        Node.getCodeUnit(len-1) == '.' &&
-        Node.getCodeUnit(len-2) == '.' &&
-        Node.getCodeUnit(len-3) == '.')
-    {
+    if(len > 0 && Node.getCodeUnit(len-1) == '\n') {
         return false;
     }
     return true;

@@ -32,19 +32,20 @@ void good_func()
 {
     LogPrintf("hello world!\n");
 }
-void good_func2()
-{
-    LogPrintf("hello world!...");
-}
 void bad_func()
 {
     LogPrintf("hello world!");
 }
 void bad_func2()
 {
-    LogPrintf("hello world!..");
+    LogPrintf("");
 }
-void bad_func3_ignored()
+void bad_func3()
+{
+    // Ending in "..." has no special meaning.
+    LogPrintf("hello world!...");
+}
+void bad_func4_ignored()
 {
     LogPrintf("hello world!"); // NOLINT(bitcoin-unterminated-logprintf)
 }
