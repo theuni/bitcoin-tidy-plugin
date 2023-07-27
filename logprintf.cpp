@@ -24,12 +24,29 @@ void LogPrintfCheck::registerMatchers(clang::ast_matchers::MatchFinder *finder)
 {
     using namespace clang::ast_matchers;
 
+    /*
+      Logprintf(..., ..., ..., ..., ..., "foo", ...)
+    */
+
     finder->addMatcher(
       callExpr(
         callee(functionDecl(hasName("LogPrintf_"))),
         hasArgument(5, stringLiteral(unterminated()).bind("logstring"))
       ),
     this);
+
+    /*
+      CWallet wallet;
+      auto walletptr = &wallet;
+      wallet.WalletLogPrintf("foo");
+      wallet->WalletLogPrintf("foo");
+    */
+    finder->addMatcher(
+      cxxMemberCallExpr(
+        thisPointerType(qualType(hasDeclaration(cxxRecordDecl(hasName("CWallet"))))),
+        callee(cxxMethodDecl(hasName("WalletLogPrintf"))),
+        hasArgument(0, stringLiteral(unterminated()).bind("logstring")))
+    , this);
 }
 
 void LogPrintfCheck::check(const clang::ast_matchers::MatchFinder::MatchResult &Result)

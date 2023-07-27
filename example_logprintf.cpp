@@ -28,9 +28,35 @@ static inline void LogPrintf_(const std::string& logging_function, const std::st
         LogPrintf(__VA_ARGS__);          \
     } while (0)
 
+
+class CWallet
+{
+    std::string GetDisplayName() const
+    {
+        return "default wallet";
+    }
+public:
+    template<typename... Params>
+    void WalletLogPrintf(std::string fmt, Params... parameters) const {
+        LogPrintf(("%s " + fmt).c_str(), GetDisplayName(), parameters...);
+    };
+};
+
 void good_func()
 {
     LogPrintf("hello world!\n");
+}
+void good_func2()
+{
+    CWallet wallet;
+    wallet.WalletLogPrintf("hi\n");
+
+    const CWallet& walletref = wallet;
+    walletref.WalletLogPrintf("hi\n");
+
+    auto* walletptr = new CWallet();
+    walletptr->WalletLogPrintf("hi\n");
+    delete walletptr;
 }
 void bad_func()
 {
@@ -48,4 +74,16 @@ void bad_func3()
 void bad_func4_ignored()
 {
     LogPrintf("hello world!"); // NOLINT(bitcoin-unterminated-logprintf)
+}
+void bad_func5()
+{
+    CWallet wallet;
+    wallet.WalletLogPrintf("hi");
+
+    const CWallet& walletref = wallet;
+    walletref.WalletLogPrintf("hi");
+
+    auto* walletptr = new CWallet();
+    walletptr->WalletLogPrintf("hi");
+    delete walletptr;
 }
