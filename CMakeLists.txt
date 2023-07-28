@@ -36,7 +36,7 @@ endif()
 set(CLANG_TIDY_COMMAND "${CLANG_TIDY_EXE}" "--load=${CMAKE_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}bitcoin-tidy${CMAKE_SHARED_LIBRARY_SUFFIX}" "-checks=-*,bitcoin-*")
 
 # Create a dummy library that runs clang-tidy tests as a side-effect of building
-add_library(bitcoin-tidy-tests OBJECT example_logprintf.cpp)
+add_library(bitcoin-tidy-tests OBJECT EXCLUDE_FROM_ALL example_logprintf.cpp)
 add_dependencies(bitcoin-tidy-tests bitcoin-tidy)
 
 set_target_properties(bitcoin-tidy-tests PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
